@@ -1,19 +1,19 @@
-from django.shortcuts import render, get_object_or_404
 from rest_framework import status
-from django.http import HttpResponse
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from product.models import Product, Category
-from product.serializers import ProductSerializer, CategorySerializer
+from product.models import Product, Category, Review
+from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
 from django.db.models import Count
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from product.filters import ProductFilter
 
 # Create your views here.
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
 
     def destroy(self, request, *args, **kwargs):
         product = self.get_object()
@@ -33,3 +33,13 @@ class CategoryViewSet(ModelViewSet):
             return Response({"message": "Cannot delete category with associated products."}, status=status.HTTP_400_BAD_REQUEST)
         category.perform_destroy()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class ReviewViewSet(ModelViewSet):
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+    
+    def get_serializer_context(self):
+        return {'product_id': self.kwargs['product_pk']}
+
