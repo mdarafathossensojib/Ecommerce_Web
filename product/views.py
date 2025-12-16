@@ -6,14 +6,19 @@ from django.db.models import Count
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from product.filters import ProductFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
+from product.paginations import DefaultPagination
 
 # Create your views here.
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
+    pagination_class = DefaultPagination
+    search_fields = ['name', 'description', 'category__name']
+    ordering_fields = ['price']
 
     def destroy(self, request, *args, **kwargs):
         product = self.get_object()
