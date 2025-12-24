@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from product.models import Product, Category, Review
+from product.models import Product, Category, Review, ProductImage
 from django.contrib.auth import get_user_model
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -25,7 +25,12 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Price must be a positive number.")
         
         return price
-    
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
 class SimpleUserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(method_name='get_current_user_name')
 
