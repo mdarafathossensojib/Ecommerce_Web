@@ -9,11 +9,16 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'product_count']
     product_count = serializers.IntegerField()
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
 
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'price', 'price_with_tax', 'category', 'stock']
+        fields = ['id', 'name', 'price', 'price_with_tax', 'category', 'stock', 'images']
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
 
@@ -25,11 +30,6 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Price must be a positive number.")
         
         return price
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ['id', 'image']
 
 class SimpleUserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(method_name='get_current_user_name')
