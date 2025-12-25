@@ -20,9 +20,9 @@ class AddCartItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'product_id', 'quantity']
 
     def save(self, **kwargs):
-        cart_id = self.context['cart_id']
-        product_id = self.validated_data['product_id']
-        quantity = self.validated_data['quantity']
+        cart_id = self.context.get('cart_id')
+        product_id = self.validated_data.get('product_id')
+        quantity = self.validated_data.get('quantity')
         try:
             cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product_id)
             cart_item.quantity += quantity
@@ -76,8 +76,8 @@ class CreateOrderSerializer(serializers.Serializer):
         return cart_id
     
     def create(self, validated_data):
-        user_id = self.context['user_id']
-        cart_id = validated_data['cart_id']
+        user_id = self.context.get('user_id')
+        cart_id = validated_data.get('cart_id')
         try:
             order = OrderService.create_order(user_id=user_id, cart_id=cart_id)
             return order
