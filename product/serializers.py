@@ -10,6 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
     product_count = serializers.IntegerField()
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    
     class Meta:
         model = ProductImage
         fields = ['id', 'image']
