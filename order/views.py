@@ -9,6 +9,7 @@ from order.services import OrderService
 from rest_framework.response import Response
 from rest_framework import status
 from sslcommerz_lib import SSLCOMMERZ
+from decouple import config
 
 # Create your views here.
 
@@ -108,7 +109,7 @@ def initiate_payment(request):
     order_id = request.data.get('orderId')
     num_items = request.data.get('numItems')
 
-    settings = { 'store_id': 'phima6981740f6f27d', 'store_pass': 'phima6981740f6f27d@ssl', 'issandbox': True }
+    settings = { 'store_id': config('store_id'), 'store_pass': config('store_pass'), 'issandbox': True }
     sslcz = SSLCOMMERZ(settings)
     post_body = {}
     post_body['total_amount'] = amount
