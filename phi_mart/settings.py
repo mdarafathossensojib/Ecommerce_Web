@@ -71,6 +71,7 @@ WSGI_APPLICATION = 'phi_mart.wsgi.app'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'ecommerce-front-end-git-main-md-arafat-hossens-projects.vercel.app',
 ]
 
 # Database
